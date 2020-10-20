@@ -6,7 +6,8 @@
   "dependencies": {
     "discord.js": "^12.4.0",
     "fetch-headers": "^2.0.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "tmi.js": "^1.5.0"
   },
   "devDependencies": {},
   "scripts": {
