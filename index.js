@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const tmi = require('tmi.js');
 const fetch = require('node-fetch');
 global.Headers = global.Headers || require("fetch-headers");
-const { prefix, token, twitchID, twitchRecovery, twitchSecret} = require('./config.json');
+const { prefix, token, twitchID, twitchRecovery, twitchSecret, jsonBlob} = require('./config.json');
 var secretPhrases;
 const client = new Discord.Client({ partials: ['MESSAGE', 'REACTION'] });
 var opts = {
@@ -19,7 +19,7 @@ const twitchNameMap = new Map();
 const twitchClient  = new tmi.client(opts);
 
 async function getSecretPhraseJson(){
-    secretPhrases = await fetch(`https://jsonblob.com/api/0aa61eda-1312-11eb-b297-97083b87b7bc`,{
+    secretPhrases = await fetch(`https://jsonblob.com/api/${jsonBlob}`,{
         method: 'GET'
     }).then(response => response.json());
     console.log("successfully grabbed JSON")
