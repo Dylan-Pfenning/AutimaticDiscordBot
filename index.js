@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const tmi = require('tmi.js');
 const fetch = require('node-fetch');
 global.Headers = global.Headers || require("fetch-headers");
-const { prefix, token, twitchID, twitchRecovery, twitchSecret, jsonBlob} = require('./config.json');
+const { prefix, token, twitchID, twitchRecovery, twitchSecret, jsonBlob } = require('./config.json');
 var secretPhrases;
 const client = new Discord.Client({ partials: ['MESSAGE', 'REACTION'] });
 var opts = {
@@ -16,10 +16,10 @@ var opts = {
 };
 const twitchNameMap = new Map();
 
-const twitchClient  = new tmi.client(opts);
+const twitchClient = new tmi.client(opts);
 
-async function getSecretPhraseJson(){
-    secretPhrases = await fetch(`https://jsonblob.com/api/${jsonBlob}`,{
+async function getSecretPhraseJson() {
+    secretPhrases = await fetch(`https://jsonblob.com/api/${jsonBlob}`, {
         method: 'GET'
     }).then(response => response.json());
     console.log("successfully grabbed JSON")
@@ -35,16 +35,30 @@ client.once('ready', async ready => {
 
 client.on('message', async message => {
     if (message.channel instanceof Discord.DMChannel) return;
-    console.log(message.member.user.id);
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
+
+    if(command === 'agree'){
+        //Send user exact instructions to verify
+
+        //give user the verification role.
+    }
+
+
+
     if (command === 'verify') {
-        if(message.member.roles.cache.some(role => role.name === 'Follower') || message.member.roles.cache.some(role => role.name === "Verification In Progress")){
-            message.channel.send("You're already verified");
+        //766496134990135326   768313201787142175'  
+        if (message.member.roles.cache.some(role => role.id === '766496134990135326') || message.member.roles.cache.some(role => role.id ==='768313201787142175')) {
+            message.member.send("You're already verified");
             return;
         }
         //grab the user ID from the name given to verify
         const twitchName = message.content.split(" ");
+        if (message.content === '!verify') {
+            message.member.send("Please add your twitch name after the !verify command!");
+            return;
+        }
+
         let userInfo = await fetch(`https://api.twitch.tv/helix/users?login=${twitchName[1]}`, {
             method: 'GET',
             headers: {
@@ -54,7 +68,7 @@ client.on('message', async message => {
         }).then(response => response.json());
         //Get the userID
         if (userInfo.data.length == 0) {
-            message.channel.send("This twitch user doesn't exist.");
+            message.member.send("This twitch user doesn't exist.");
             return;
         }
 
@@ -62,27 +76,22 @@ client.on('message', async message => {
         var ran_key = obj_keys[Math.floor(Math.random() * obj_keys.length)];
         let secretPhrase = secretPhrases.secret_phrases[ran_key];
         //Generate sentance to say to verify identity
-        const role = message.guild.roles.cache.find(role => role.name === "Verification In Progress");
-        message.member.roles.add(role);
+        message.member.roles.add('768313201787142175');
+        message.memeber.roles.remove('768277106383519745');
         twitchNameMap.set(`${twitchName[1]}`, { key: secretPhrase, discord: message });
-        message.member.send(`Your secret phrase to type in autimatics chat for verification is;`);
+        message.member.send(`Your secret phrase to type in autimatics *TWITCH* chat for verification is;`);
         message.member.send(secretPhrase);
-        
+        message.member.send('Post the secret phrase above here: https://www.twitch.tv/autimaticTV');
+
+
     }
 
-    if(command === 'update'){
+    if (command === 'update') {
         //mod role id: 462789424774643734
-        if(message.member.roles.cache.has('4627894247746437342')){
+        if (message.member.roles.cache.has('4627894247746437342')) {
             getSecretPhraseJson();
             message.channel.send("Updating beep boop");
             return;
-        }
-    }
-
-    if(command === 'token'){
-        if(message.member.user.id === '145463495830405120'){
-
-            console.log("Updating auth token");
         }
     }
 });
@@ -94,13 +103,12 @@ twitchClient.on('message', (target, context, msg) => {
         if (secretPhrase === twitchNameMap.get(context.username).key) {
             let discord = twitchNameMap.get(context.username).discord;
             //assign roles to the user
-            const role = discord.guild.roles.cache.find(role => role.name === "Follower");
-            discord.member.roles.add(role);
+            discord.member.roles.add('766496134990135326');
             const roleToRemove = discord.guild.roles.cache.find(role => role.name === "Verification In Progress");
-            discord.member.roles.remove(roleToRemove);
+            discord.member.roles.remove('768313201787142175');
             //change users name
             discord.member.setNickname(context.username);
-            discord.channel.send(`Verified <@${discord.member.id}>`);
+            discord.member.send(`You have been verified!`);
             //Remove this value from the map
             twitchNameMap.delete(context.username);
         }
