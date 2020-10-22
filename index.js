@@ -12,7 +12,7 @@ var opts = {
         password: twitchSecret
     },
     channels: [
-        "autimatictv", 'zriolu'
+        "autimatictv"
     ]
 };
 const twitchNameMap = new Map();
@@ -59,7 +59,7 @@ client.on('message', async message => {
         }
         //grab the user ID from the name given to verify
         const twitchNameArr = message.content.split(" ");
-        if (message.content === '!verify') {
+        if (twitchNameArr[1] === undefined) {
             message.member.send("Please add your twitch name after the !verify command!");
             message.delete();
             return;
@@ -84,13 +84,12 @@ client.on('message', async message => {
         //Generate sentance to say to verify identity
         if (message.guild.id === '462786774499065858') {
             message.member.roles.add('768313201787142175');
-            message.memeber.roles.remove('768277106383519745');
+            message.member.roles.remove('768277106383519745');
         }
         twitchNameMap.set(`${twitchName}`, { key: secretPhrase, discord: message });
-        message.member.send(`Your secret phrase to type in autimatics *TWITCH* chat for verification is;`);
+        message.member.send('Post the secret phrase here: https://www.twitch.tv/autimaticTV');
+        message.member.send(`Your secret phrase to type in autimatics *TWITCH* chat for verification is:`);
         message.member.send(secretPhrase);
-        message.member.send('Post the secret phrase above here: https://www.twitch.tv/autimaticTV');
-
         message.delete();
 
     }
