@@ -74,7 +74,7 @@ client.on('message', async message => {
             }
         }).then(response => response.json());
         //Get the userID
-        if (userInfo.data.length === undefined) {
+        if (userInfo.data === undefined) {
             message.member.send("This twitch user doesn't exist.");
             return;
         }
