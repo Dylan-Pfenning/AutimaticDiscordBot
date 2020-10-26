@@ -2,14 +2,14 @@ const Discord = require('discord.js');
 const tmi = require('tmi.js');
 const fetch = require('node-fetch');
 global.Headers = global.Headers || require("fetch-headers");
-const { prefix, token, twitchID, twitchRecovery, twitchSecret, jsonBlob } = require('./config.json');
+//const { prefix, token, twitchID, twitchRecovery, twitchSecret, jsonBlob } = require('./config.json');
 var secretPhrases;
 var guild;
 const client = new Discord.Client({ partials: ['MESSAGE', 'REACTION'] });
 var opts = {
     identity: {
         username: "TimBot",
-        password: twitchSecret
+        password: process.env.twitchSecret
     },
     channels: [
         "autimatictv"
@@ -20,7 +20,7 @@ const twitchNameMap = new Map();
 const twitchClient = new tmi.client(opts);
 
 async function getSecretPhraseJson() {
-    secretPhrases = await fetch(`https://jsonblob.com/api/${jsonBlob}`, {
+    secretPhrases = await fetch(`https://jsonblob.com/api/${process.env.jsonBlob}`, {
         method: 'GET'
     }).then(response => response.json());
     console.log("successfully grabbed JSON")
@@ -38,7 +38,7 @@ client.once('ready', async ready => {
 
 client.on('message', async message => {
     if (message.channel instanceof Discord.DMChannel) return;
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const args = message.content.slice(process.env.prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
     if (command === 'topusers') {
@@ -82,8 +82,8 @@ client.on('message', async message => {
         let userInfo = await fetch(`https://api.twitch.tv/helix/users?login=${twitchName}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${twitchSecret}`,
-                'Client-ID': twitchID
+                'Authorization': `Bearer ${process.env.twitchSecret}`,
+                'Client-ID': process.env.twitchID
             }
         }).then(response => response.json());
         //Get the userID
@@ -162,7 +162,7 @@ twitchClient.on('message', (target, context, msg, self) => {
     }
 });
 
-client.login(token);
+client.login(process.env.token);
 
 //1f8ced92-62fc-4a47-9f61-28839774ce94
 
