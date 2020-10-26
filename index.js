@@ -41,10 +41,17 @@ client.on('message', async message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
-    if (command === 'agree') {
-        //Send user exact instructions to verify
-
-        //give user the verification role.
+    if (command === 'topusers') {
+        if (message.member.roles.cache.has('462789424774643734')) {
+            //get top 5 chatters or something idk.
+            let top5Users = 'The top discord users of the week are:\n';
+            for (let index = 1; index < 6; index++) {
+                let user = message.guild.members.cache.random();
+                top5Users += `${index}: ${user.user.username} with a score of: ${Math.floor(Math.random() * 2500) + 1}!\n`;
+            }
+            top5Users += `Ranks will be reset every week!`;
+            message.channel.send(top5Users);
+        }
     }
 
 
@@ -61,6 +68,12 @@ client.on('message', async message => {
         const twitchNameArr = message.content.split(" ");
         if (twitchNameArr[1] === undefined) {
             message.member.send("Please add your twitch name after the !verify command!");
+            message.delete();
+            return;
+        }
+
+        if (twitchNameArr[2] !== undefined) {
+            message.member.send(`The bot has detected potential auto correct in your command. Please only type "!verify YOURTWITCHNAMEHERE" for verification to work!`);
             message.delete();
             return;
         }
@@ -95,11 +108,27 @@ client.on('message', async message => {
     }
 
     if (command === 'update') {
-        //mod role id: 462789424774643734
-        if (message.member.roles.cache.has('4627894247746437342')) {
+        //mod role id: 462789424774643734 
+        if (message.member.roles.cache.has('462789424774643734')) {
             getSecretPhraseJson();
             message.channel.send("Updating beep boop");
             return;
+        }
+    }
+
+    if (command === 'maint') {
+        if (message.member.roles.cache.has('462789424774643734')) {
+            //Get all members with the role id: 768313201787142175
+            let roleToRemove = "768313201787142175";
+            let roleToAdd = "768277106383519745";
+            let membersWithRole = message.guild.roles.cache.get(roleToRemove).members.array();
+            membersWithRole.forEach(member => {
+                member.roles.remove(roleToRemove);
+                member.roles.add(roleToAdd);
+                member.send(`Hi! I will be going down for maintenance so you verification process will be reset!`);
+                member.send(`Once I am alive again please make sure to go to the verify channel and use the !verify YOURTWITCHNAME command again!`)
+                member.send(`Thank you for your patience!`);
+            });
         }
     }
 });
@@ -136,3 +165,5 @@ twitchClient.on('message', (target, context, msg, self) => {
 client.login(token);
 
 //1f8ced92-62fc-4a47-9f61-28839774ce94
+
+//Guild.members.random() <- get random guild member for rankings
