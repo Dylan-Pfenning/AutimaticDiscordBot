@@ -183,8 +183,8 @@ client.on('message', async message => {
             let roleToAdd = "768277106383519745";
             let membersWithRole = message.guild.roles.cache.get(roleToRemove).members.array();
             membersWithRole.forEach(member => {
-                member.roles.remove(roleToRemove);
                 member.roles.add(roleToAdd);
+                member.roles.remove(roleToRemove);
                 member.send(`Hi! I will be going down for maintenance so you verification process will be reset!`);
                 member.send(`Once I am alive again please make sure to go to the verify channel and use the !verify YOURTWITCHNAME command again!`)
                 member.send(`Thank you for your patience!`);
