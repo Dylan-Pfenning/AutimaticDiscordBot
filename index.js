@@ -113,7 +113,6 @@ client.on('message', async message => {
         
         //Check to make sure the splitter is in the right place
         const steamURL = steamLinkArr[1].split('/');
-        console.log(steamURL);
         let steamVanity;
         if(steamURL[1] !== 'https'){
             steamVanity = steamURL[2];
@@ -122,10 +121,11 @@ client.on('message', async message => {
         }
 
         //if its a valid splitter
-         
+         console.log(steamVanity);
         let steamInfo = await fetch(`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${process.env.steamKey}&vanityurl=${steamVanity}`, {
             method: 'GET'
         }).then(response => response.json());
+
         if(steamInfo.response.steamid === undefined){
             message.member.send('Invalid profile URL');
             message.delete();
@@ -139,7 +139,7 @@ client.on('message', async message => {
         //has to = 1
         if (steamUserInfo.response.players[0].commentpermission === 1) {
             //if its valid -> post it in the dotted line chat
-            let signSpot = message.guild.channels.find(channel => channel.id === '770883449023496223');
+            let signSpot = message.guild.channels.cache.find(channel => channel.id === '770883449023496223');
             signSpot.send(steamLinkArr[1]);
             message.member.send("Your link has been approve and will be signed soon!");
             message.delete();
