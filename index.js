@@ -114,7 +114,7 @@ client.on('message', async message => {
         //Check to make sure the splitter is in the right place
         const steamURL = steamLinkArr[1].split('/');
         let steamVanity;
-        if(steamURL[1] !== 'https'){
+        if(steamURL[1] !== 'https:'){
             steamVanity = steamURL[2];
         } else {
             steamVanity = steamURL[4];
@@ -222,7 +222,5 @@ twitchClient.on('message', (target, context, msg, self) => {
 });
 
 client.login(process.env.token);
-
-//1f8ced92-62fc-4a47-9f61-28839774ce94
 
 //Guild.members.random() <- get random guild member for rankings
