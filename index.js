@@ -113,9 +113,10 @@ client.on('message', async message => {
         
         //Check to make sure the splitter is in the right place
         const steamURL = steamLinkArr[1].split('/');
+        console.log(steamURL);
         let steamVanity;
         let steamURLToSend = steamLinkArr[1];
-        if(steamURL[1] !== 'https:'){
+        if(steamURL[0] !== 'https:'){
             steamVanity = steamURL[2];
             steamURLToSend = 'https://' + steamLinkArr[1];
         } else {
