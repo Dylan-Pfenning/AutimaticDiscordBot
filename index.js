@@ -113,7 +113,6 @@ client.on('message', async message => {
         
         //Check to make sure the splitter is in the right place
         const steamURL = steamLinkArr[1].split('/');
-        console.log(steamURL);
         let steamVanity;
         let steamURLToSend = steamLinkArr[1];
         if(steamURL[0] !== 'https:'){
@@ -124,7 +123,6 @@ client.on('message', async message => {
         }
 
         //if its a valid splitter
-        console.log(steamVanity);
         let steamInfo = await fetch(`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${process.env.steamKey}&vanityurl=${steamVanity}`, {
             method: 'GET'
         }).then(response => response.json());
