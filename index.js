@@ -97,11 +97,6 @@ client.on('message', async message => {
             message.delete();
             return;
         }
-        if(message.member.roles.cache.some(role => role.id !== '766476018311495701')){
-            message.member.send('You must be a moderator to use that command!');
-            message.delete();
-            return;
-        }
         //ensure user sent the link
         const steamLinkArr = message.content.split(" ");
         if (steamLinkArr[1] === undefined) {
