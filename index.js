@@ -35,26 +35,10 @@ client.once('ready', async ready => {
 
 })
 
-
 client.on('message', async message => {
     if (message.channel instanceof Discord.DMChannel) return;
     const args = message.content.slice(process.env.prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
-
-    if (command === 'topusers') {
-        if (message.member.roles.cache.has('462789424774643734')) {
-            //get top 5 chatters or something idk.
-            let top5Users = 'The top discord users of the week are:\n';
-            for (let index = 1; index < 6; index++) {
-                let user = message.guild.members.cache.random();
-                top5Users += `${index}: ${user.user.username} with a score of: ${Math.floor(Math.random() * 2500) + 1}!\n`;
-            }
-            top5Users += `Ranks will be reset every week!`;
-            message.channel.send(top5Users);
-        }
-    }
-
-
 
     if (command === 'verify') {
 
@@ -106,6 +90,86 @@ client.on('message', async message => {
         message.delete();
 
     }
+
+    if (command === 'sign') {
+        if(message.channel.id !== '768723751776026628'){
+            message.member.send("Please use this command in the dotted line chat.");
+            message.delete();
+            return;
+        }
+        if(message.member.roles.cache.some(role => role.id !== '766476018311495701')){
+            message.member.send('You must be a moderator to use that command!');
+            message.delete();
+            return;
+        }
+        //ensure user sent the link
+        const steamLinkArr = message.content.split(" ");
+        if (steamLinkArr[1] === undefined) {
+            message.member.send("Please add your steam URL after the !sign command!");
+            message.delete();
+            return;
+        }
+        //If they had an auto correct error (another space)
+        if (steamLinkArr[2] !== undefined) {
+            message.member.send(`The bot has detected potential auto correct in your command. Please only type "!sign YOURSTEAMURLHERE" for verification to work!`);
+            message.delete();
+            return;
+        }
+        
+        //Check to make sure the splitter is in the right place
+        const steamURL = steamLinkArr[1].split('/');
+        console.log(steamURL);
+        let steamVanity;
+        if(steamURL[1] !== 'https'){
+            steamVanity = steamURL[2];
+        } else {
+            steamVanity = steamURL[4];
+        }
+
+        //if its a valid splitter
+         
+        let steamInfo = await fetch(`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${process.env.steamKey}&vanityurl=${steamVanity}`, {
+            method: 'GET'
+        }).then(response => response.json());
+        if(steamInfo.response.steamid === undefined){
+            message.member.send('Invalid profile URL');
+            message.delete();
+            return;
+        }
+
+
+        let steamUserInfo = await fetch(`http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.steamKey}&steamids=${steamInfo.response.steamid}`, {
+            method: 'GET'
+        }).then(response => response.json());
+        //has to = 1
+        if (steamUserInfo.response.players[0].commentpermission === 1) {
+            //if its valid -> post it in the dotted line chat
+            let signSpot = message.guild.channels.find(channel => channel.id === '770883449023496223');
+            signSpot.send(steamLinkArr[1]);
+            message.member.send("Your link has been approve and will be signed soon!");
+            message.delete();
+            return;
+        } else {
+            message.member.send("Either your profile or your comments are private. Please make them public so Tim can sign your profile");
+            message.delete();
+            return;
+        }
+
+    }
+
+    if (command === 'topusers') {
+        if (message.member.roles.cache.has('462789424774643734')) {
+            //get top 5 chatters or something idk.
+            let top5Users = 'The top discord users of the week are:\n';
+            for (let index = 1; index < 6; index++) {
+                let user = message.guild.members.cache.random();
+                top5Users += `${index}: ${user.user.username} with a score of: ${Math.floor(Math.random() * 2500) + 1}!\n`;
+            }
+            top5Users += `Ranks will be reset every week!`;
+            message.channel.send(top5Users);
+        }
+    }
+
 
     if (command === 'update') {
         //mod role id: 462789424774643734 
