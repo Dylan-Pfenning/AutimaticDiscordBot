@@ -121,7 +121,7 @@ client.on('message', async message => {
         }
 
         //if its a valid splitter
-         console.log(steamVanity);
+        //console.log(steamVanity);
         let steamInfo = await fetch(`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${process.env.steamKey}&vanityurl=${steamVanity}`, {
             method: 'GET'
         }).then(response => response.json());
