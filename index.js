@@ -249,11 +249,11 @@ async function startup(tempGuild) {
         let membersWithRole = role.members.array();
         console.log(membersWithRole);
         membersWithRole.forEach(member => {
-            console.log(member);
-            //     member.roles.add(roleToAdd);
-            //     member.roles.remove(roleToRemoveId);
-            //     member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err =>{
-            //         console.log(`${member.nickname} has dm's privated`);
+            member.roles.add(roleToAdd);
+            member.roles.remove(roleToRemoveId);
+            member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err => {
+                console.log(`${member.nickname} has dm's privated`);
+            });
         });
     }).catch(console.error());
 }
