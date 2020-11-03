@@ -246,16 +246,15 @@ async function startup(tempGuild) {
     let roleToAdd = "768277106383519745";
     let roleToRemove = tempGuild.roles.cache.get(roleToRemoveId);
     let membersWithRole = new Array();
+    console.log(`Fetching Members`);
     tempGuild.members.fetch().then(fetchedMembers => {
         const totalOnline = fetchedMembers.filter(member => member.presence.status === 'online');
         // We now have a collection with all online member objects in the totalOnline variable
         console.log(`There are currently ${totalOnline.size} members online in this guild!`)
-        fetchedMembers.filter(member => {
-            if (member.roles.cache.has(roleToRemoveId)) {
-                membersWithRole.push(member);
-                console.log(`foundMember`);
-            }
-        })
+        if (member.roles.cache.has(roleToRemoveId)) {
+            membersWithRole.push(member);
+            console.log(`foundMember`);
+        }
         console.log(`${membersWithRole}`);
         console.log(`Bot has cleared out all the users with the verification in progress role.`);
     });
