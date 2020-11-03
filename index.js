@@ -249,12 +249,9 @@ function startup(guild) {
     let roleToAdd = "768277106383519745";
     let roleToRemove = guild.roles.cache.get(roleToRemoveId);
     console.log(roleToRemove);
-    if(roleToRemove === undefined){
-        return;
-    }
     let membersWithRole = new Array();
-    roleToRemove.member.forEach(user =>{
-        membersWithRole.push(user);
+    guild.members.cache.foreach(member => {
+        membersWithRole.push(member);
     })
     console.log(membersWithRole);
     membersWithRole.forEach(member => {
