@@ -249,7 +249,7 @@ function startup(guild) {
     guild.members.fetch().then(fetchedMembers => {
         membersWithRole = fetchedMembers.filter(member => member.roles.cache.has(roleToRemoveId));
         // We now have a collection with all online member objects in the totalOnline variable
-        //console.log(`${membersWithRole}`);
+        console.log(`${membersWithRole}`);
     });
     console.log(membersWithRole);
     // membersWithRole.forEach(member => {
