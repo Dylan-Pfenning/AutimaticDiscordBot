@@ -235,6 +235,7 @@ client.on('message', async message => {
     if (command === 'maint') {
         if (message.member.roles.cache.has('462789424774643734')) {
             startup(message.guild);
+            message.delete();
         }
     }
 });
