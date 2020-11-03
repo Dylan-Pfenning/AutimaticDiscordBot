@@ -247,7 +247,8 @@ async function startup(tempGuild) {
     //let roleToRemove = tempGuild.roles.cache.get(roleToRemoveId);
     console.log(`Fetching Members`);
     tempGuild.roles.fetch(roleToRemoveId).then(role => {
-        let membersWithRole = role.members;
+        let membersWithRole = role.members.array();
+        console.log(membersWithRole);
         membersWithRole.forEach(member => {
             console.log(member);
             //     member.roles.add(roleToAdd);
