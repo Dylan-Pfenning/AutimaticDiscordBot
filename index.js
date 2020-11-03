@@ -247,8 +247,14 @@ async function startup(tempGuild) {
     //let roleToRemove = tempGuild.roles.cache.get(roleToRemoveId);
     console.log(`Fetching Members`);
     tempGuild.roles.fetch(roleToRemoveId).then(role => {
-        let membersWithRole = role.members
-        console.log(membersWithRole);
+        let membersWithRole = role.members;
+        membersWithRole.forEach(member => {
+            console.log(member);
+            //     member.roles.add(roleToAdd);
+            //     member.roles.remove(roleToRemoveId);
+            //     member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err =>{
+            //         console.log(`${member.nickname} has dm's privated`);
+        });
     }).catch(console.error());
 
     // tempGuild.members.fetch().then(fetchedMembers => {
