@@ -148,6 +148,7 @@ client.on('message', async message => {
         const steamURL = steamLinkArr[1].split('/');
         let steamURLToSend = steamLinkArr[1];
         let id64;
+        console.log(steamLinkArr);
         if (steamLinkArr[2] === 'id') {
             let steamVanity;
             if (steamURL[0] !== 'https:') {
