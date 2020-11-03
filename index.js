@@ -244,7 +244,7 @@ function startup() {
     //Get all members with the role id: 768313201787142175
     let roleToRemove = "768313201787142175";
     let roleToAdd = "768277106383519745";
-    let membersWithRole = DiscordGuild.roles.cache.get(roleToRemove).members.array();
+    let membersWithRole = DiscordGuild.roles.cache.get("768313201787142175").members.array();
     console.log(membersWithRole);
     membersWithRole.forEach(member => {
         member.roles.add(roleToAdd);
