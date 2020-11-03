@@ -32,8 +32,7 @@ client.once('ready', async ready => {
     twitchClient.connect();
     console.log('Tim bot in the chat beep boop');
     DiscordGuild = client.guilds.cache.find(guild => guild.id === '462786774499065858');
-    console.log(`Discord guild is ${DiscordGuild.name}`);
-    startup(client.guilds.cache.find(guild => guild.id === '462786774499065858'));
+    console.log(`Please Run the maint command.`)
 })
 
 client.on('message', async message => {
@@ -246,35 +245,17 @@ async function startup(tempGuild) {
     let roleToAdd = "768277106383519745";
     //let roleToRemove = tempGuild.roles.cache.get(roleToRemoveId);
     console.log(`Fetching Members`);
-    tempGuild.roles.fetch(roleToRemoveId).then(role => console.log(role.members.array())).catch(console.error());
-    // let membersWithRole = role.members.array();
-    //     console.log(membersWithRole);
-    //     membersWithRole.forEach(member => {
-    //         console.log(member);
-    //         //     member.roles.add(roleToAdd);
-    //         //     member.roles.remove(roleToRemoveId);
-    //         //     member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err =>{
-    //         //         console.log(`${member.nickname} has dm's privated`);
-    //     });
-    // tempGuild.members.fetch().then(fetchedMembers => {
-    //     const totalOnline = fetchedMembers.filter(member => member.presence.status === 'online');
-    //     // We now have a collection with all online member objects in the totalOnline variable
-    //     console.log(`There are currently ${totalOnline.size} members online in this guild!`)
-    //     if (member.roles.cache.has(roleToRemoveId)) {
-    //         membersWithRole.push(member);
-    //         console.log(`foundMember`);
-    //     }
-    //     console.log(`${membersWithRole}`);
-    //     console.log(`Bot has cleared out all the users with the verification in progress role.`);
-    // });
-    // membersWithRole.forEach(member => {
-    //     member.roles.add(roleToAdd);
-    //     member.roles.remove(roleToRemoveId);
-    //     member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err =>{
-    //         console.log(`${member.nickname} has dm's privated`);
-    //     });
-    // });
-
+    tempGuild.roles.fetch(roleToRemoveId).then(role => {
+        let membersWithRole = role.members.array();
+        console.log(membersWithRole);
+        membersWithRole.forEach(member => {
+            console.log(member);
+            //     member.roles.add(roleToAdd);
+            //     member.roles.remove(roleToRemoveId);
+            //     member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err =>{
+            //         console.log(`${member.nickname} has dm's privated`);
+        });
+    }).catch(console.error());
 }
 
 twitchClient.on('message', (target, context, msg, self) => {
