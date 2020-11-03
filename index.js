@@ -238,7 +238,6 @@ client.on('message', async message => {
             startup();
         }
     }
-    message.guild.roles.
 });
 
 function startup() {
