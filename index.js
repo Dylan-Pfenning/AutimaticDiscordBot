@@ -250,18 +250,17 @@ function startup(guild) {
     let roleToRemove = guild.roles.cache.get(roleToRemoveId);
     let membersWithRole = new Array();
     guild.members.cache.forEach(member => {
+        console.log(member);
         membersWithRole.push(member);
     })
     console.log(membersWithRole);
-    membersWithRole.forEach(member => {
-        member.roles.add(roleToAdd);
-        member.roles.remove(roleToRemoveId);
-        console.log(member.nickname);
-        member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err =>{
-            console.log(`${member.nickname} has dm's privated`);
-        });
-
-    });
+    // membersWithRole.forEach(member => {
+    //     member.roles.add(roleToAdd);
+    //     member.roles.remove(roleToRemoveId);
+    //     member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err =>{
+    //         console.log(`${member.nickname} has dm's privated`);
+    //     });
+    // });
     console.log(`Bot has cleared out all the users with the verification in progress role.`)
 }
 
