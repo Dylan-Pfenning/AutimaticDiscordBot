@@ -32,7 +32,7 @@ client.once('ready', async ready => {
     twitchClient.connect();
     console.log('Tim bot in the chat beep boop');
     guild = client.guilds.cache.find(guild => guild.id === '462786774499065858');
-
+    startup();
 })
 
 client.on('message', async message => {
@@ -44,20 +44,32 @@ client.on('message', async message => {
 
         //766496134990135326   768313201787142175'  
         if (message.member.roles.cache.some(role => role.id === '766496134990135326') || message.member.roles.cache.some(role => role.id === '768313201787142175')) {
-            message.member.send("You're already verified");
+            try {
+                message.member.send("You're already verified");
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             message.delete();
             return;
         }
         //grab the user ID from the name given to verify
         const twitchNameArr = message.content.split(" ");
         if (twitchNameArr[1] === undefined) {
-            message.member.send("Please add your twitch name after the !verify command!");
+            try {
+                message.member.send("Please add your twitch name after the !verify command!");
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             message.delete();
             return;
         }
 
         if (twitchNameArr[2] !== undefined) {
-            message.member.send(`The bot has detected potential auto correct in your command. Please only type "!verify YOURTWITCHNAMEHERE" for verification to work!`);
+            try {
+                message.member.send(`The bot has detected potential auto correct in your command. Please only type "!verify YOURTWITCHNAMEHERE" for verification to work!`);
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             message.delete();
             return;
         }
@@ -72,7 +84,11 @@ client.on('message', async message => {
         }).then(response => response.json());
         //Get the userID
         if (userInfo.data === undefined) {
-            message.member.send("This twitch user doesn't exist.");
+            try {
+                message.member.send("This twitch user doesn't exist.");
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             return;
         }
         var obj_keys = Object.keys(secretPhrases.secret_phrases);
@@ -84,57 +100,89 @@ client.on('message', async message => {
             message.member.roles.remove('768277106383519745');
         }
         twitchNameMap.set(`${twitchName}`, { key: secretPhrase, discord: message });
-        message.member.send('Post the secret phrase here: https://www.twitch.tv/autimaticTV');
-        message.member.send(`Your secret phrase to type in autimatics *TWITCH* chat for verification is:`);
-        message.member.send(secretPhrase);
+        try {
+            message.member.send('Post the secret phrase here: https://www.twitch.tv/autimaticTV');
+            message.member.send(`Your secret phrase to type in autimatics *TWITCH* chat for verification is:`);
+            message.member.send(secretPhrase);
+        } catch (err) {
+            console.log(`${message.member.nickname} has dm's privated`);
+        }
         message.delete();
 
     }
 
     if (command === 'sign') {
-        if(message.channel.id !== '768723751776026628'){
-            message.member.send("Please use this command in the dotted line chat.");
+        if (message.channel.id !== '768723751776026628') {
+            try {
+                message.member.send("Please use this command in the dotted line chat.");
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             message.delete();
             return;
         }
         //ensure user sent the link
         const steamLinkArr = message.content.split(" ");
         if (steamLinkArr[1] === undefined) {
-            message.member.send("Please add your steam URL after the !sign command!");
+            try {
+                message.member.send("Please add your steam URL after the !sign command!");
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             message.delete();
             return;
         }
         //If they had an auto correct error (another space)
         if (steamLinkArr[2] !== undefined) {
-            message.member.send(`The bot has detected potential auto correct in your command. Please only type "!sign YOURSTEAMURLHERE" for verification to work!`);
+            try {
+                message.member.send(`The bot has detected potential auto correct in your command. Please only type "!sign YOURSTEAMURLHERE" for verification to work!`);
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             message.delete();
             return;
         }
-        
+
         //Check to make sure the splitter is in the right place
         const steamURL = steamLinkArr[1].split('/');
-        let steamVanity;
         let steamURLToSend = steamLinkArr[1];
-        if(steamURL[0] !== 'https:'){
-            steamVanity = steamURL[2];
-            steamURLToSend = 'https://' + steamLinkArr[1];
-        } else {
-            steamVanity = steamURL[4];
+        let id64;
+        if (steamLinkArr[2] === 'id') {
+            let steamVanity;
+            if (steamURL[0] !== 'https:') {
+                steamVanity = steamURL[2];
+                steamURLToSend = 'https://' + steamLinkArr[1];
+            } else {
+                steamVanity = steamURL[4];
+            }
+
+            //if its a valid splitter
+            let steamInfo = await fetch(`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${process.env.steamKey}&vanityurl=${steamVanity}`, {
+                method: 'GET'
+            }).then(response => response.json());
+
+            if (steamInfo.response.steamid === undefined) {
+                try {
+                    message.member.send('Invalid profile URL');
+                } catch (err) {
+                    console.log(`${message.member.nickname} has dm's privated`);
+                }
+                message.delete();
+                return;
+            }
+
+            id64 = steamInfo.response.steamid;
+
+        } else if (steamLinkArr[2] === 'profiles') {
+            if (steamURL[0] !== 'https:') {
+                id64 = steamURL[2];
+                steamURLToSend = 'https://' + steamLinkArr[1];
+            } else {
+                id64 = steamURL[4];
+            }
         }
 
-        //if its a valid splitter
-        let steamInfo = await fetch(`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${process.env.steamKey}&vanityurl=${steamVanity}`, {
-            method: 'GET'
-        }).then(response => response.json());
-
-        if(steamInfo.response.steamid === undefined){
-            message.member.send('Invalid profile URL');
-            message.delete();
-            return;
-        }
-
-
-        let steamUserInfo = await fetch(`http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.steamKey}&steamids=${steamInfo.response.steamid}`, {
+        let steamUserInfo = await fetch(`http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.steamKey}&steamids=${id64}`, {
             method: 'GET'
         }).then(response => response.json());
         //has to = 1
@@ -142,11 +190,19 @@ client.on('message', async message => {
             //if its valid -> post it in the dotted line chat
             let signSpot = message.guild.channels.cache.find(channel => channel.id === '770883449023496223');
             signSpot.send(steamURLToSend);
-            message.member.send("Your link has been approve and will be signed soon!");
+            try {
+                message.member.send("Your link has been approve and will be signed soon!");
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             message.delete();
             return;
         } else {
-            message.member.send("Either your profile or your comments are private. Please make them public so Tim can sign your profile");
+            try {
+                message.member.send("Either your profile or your comments are private. Please make them public so Tim can sign your profile");
+            } catch (err) {
+                console.log(`${message.member.nickname} has dm's privated`);
+            }
             message.delete();
             return;
         }
@@ -171,28 +227,36 @@ client.on('message', async message => {
         //mod role id: 462789424774643734 
         if (message.member.roles.cache.has('462789424774643734')) {
             getSecretPhraseJson();
-            message.channel.send("Updating beep boop");
+            console.log("Updating beep boop");
             return;
         }
     }
 
     if (command === 'maint') {
         if (message.member.roles.cache.has('462789424774643734')) {
-            //Get all members with the role id: 768313201787142175
-            let roleToRemove = "768313201787142175";
-            let roleToAdd = "768277106383519745";
-            let membersWithRole = message.guild.roles.cache.get(roleToRemove).members.array();
-            membersWithRole.forEach(member => {
-                member.roles.add(roleToAdd);
-                member.roles.remove(roleToRemove);
-                member.send(`Hi! I will be going down for maintenance so you verification process will be reset!`);
-                member.send(`Once I am alive again please make sure to go to the verify channel and use the !verify YOURTWITCHNAME command again!`)
-                member.send(`Thank you for your patience!`);
-            });
+            startup();
         }
     }
 });
 
+function startup() {
+    //Get all members with the role id: 768313201787142175
+    let roleToRemove = "768313201787142175";
+    let roleToAdd = "768277106383519745";
+    let membersWithRole = guild.roles.cache.get(roleToRemove).members.array();
+    membersWithRole.forEach(member => {
+        member.roles.add(roleToAdd);
+        member.roles.remove(roleToRemove);
+        console.log(member.nickname);
+        try {
+            member.send(`Hi due to my restart your verification progress has been reset. Please start again`);
+
+        } catch (err) {
+            console.log(`${member.nickname} has dm's privated`);
+        }
+    });
+    console.log(`Bot has cleared out all the users with the verification in progress role.`)
+}
 
 twitchClient.on('message', (target, context, msg, self) => {
     const secretPhrase = msg.trim();
