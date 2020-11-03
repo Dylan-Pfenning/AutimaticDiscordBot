@@ -33,7 +33,7 @@ client.once('ready', async ready => {
     console.log('Tim bot in the chat beep boop');
     DiscordGuild = client.guilds.cache.find(guild => guild.id === '462786774499065858');
     console.log(`Discord guild is ${DiscordGuild.name}`);
-    startup();
+    startup(client.guilds.cache.find(guild => guild.id === '462786774499065858'));
 })
 
 client.on('message', async message => {
@@ -238,16 +238,20 @@ client.on('message', async message => {
 
     if (command === 'maint') {
         if (message.member.roles.cache.has('462789424774643734')) {
-            startup();
+            startup(message.guild);
         }
     }
 });
 
-function startup() {
+function startup(guild) {
     //Get all members with the role id: 768313201787142175
     let roleToRemoveId = "768313201787142175";
     let roleToAdd = "768277106383519745";
-    let roleToRemove = DiscordGuild.roles.cache.get(roleToRemoveId);
+    let roleToRemove = guild.roles.cache.get(roleToRemoveId);
+    console.log(roleToRemove);
+    if(roleToRemove === undefined){
+        return;
+    }
     let membersWithRole = new Array();
     roleToRemove.member.forEach(user =>{
         membersWithRole.push(user);
