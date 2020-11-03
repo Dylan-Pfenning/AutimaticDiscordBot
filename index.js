@@ -236,9 +236,10 @@ client.on('message', async message => {
         if (message.member.roles.cache.has('462789424774643734')) {
             //startup(message.guild);
             let roleToRemove =  message.guild.roles.cache.get('768313201787142175');
+            console.log(roleToRemove.members.array());
             if(roleToRemove === undefined) return;
-
-            console.log(roleToRemove.members);
+            let membersWithRole = roleToRemove.members.array();
+            console.log(membersWithRole);
             message.delete();
         }
     }
