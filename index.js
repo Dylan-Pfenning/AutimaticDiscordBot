@@ -245,9 +245,15 @@ function startup(tempGuild) {
     let roleToRemoveId = "768313201787142175";
     let roleToAdd = "768277106383519745";
     let roleToRemove = tempGuild.roles.cache.get(roleToRemoveId);
-    let membersWithRole;
+    let membersWithRole = new Array();
     tempGuild.members.fetch().then(fetchedMembers => {
-        membersWithRole = fetchedMembers.filter(member => member.roles.cache.has(roleToRemoveId));
+        //membersWithRole = fetchedMembers.filter(member => member.roles.cache.has(roleToRemoveId));
+        fetchedMembers.filter(member=>{
+            if(member.roles.cache.has(roleToRemoveId)){
+                membersWithRole.push(member);
+                console.log(`foundMember`);
+            }
+        })
         // We now have a collection with all online member objects in the totalOnline variable
         console.log(`${membersWithRole}`);
         console.log(`Bot has cleared out all the users with the verification in progress role.`);
