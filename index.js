@@ -257,9 +257,9 @@ function startup(guild) {
         member.roles.add(roleToAdd);
         member.roles.remove(roleToRemoveId);
         console.log(member.nickname);
-        member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err){
+        member.send(`Hi due to my restart your verification progress has been reset. Please start again`).catch(err =>{
             console.log(`${member.nickname} has dm's privated`);
-        }
+        });
 
     });
     console.log(`Bot has cleared out all the users with the verification in progress role.`)
