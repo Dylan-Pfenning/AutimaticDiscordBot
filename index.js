@@ -240,18 +240,18 @@ client.on('message', async message => {
     }
 });
 
-function startup(guild) {
+function startup(tempGuild) {
     //Get all members with the role id: 768313201787142175
     let roleToRemoveId = "768313201787142175";
     let roleToAdd = "768277106383519745";
-    let roleToRemove = guild.roles.cache.get(roleToRemoveId);
+    let roleToRemove = tempGuild.roles.cache.get(roleToRemoveId);
     let membersWithRole;
-    guild.members.fetch().then(fetchedMembers => {
+    tempGuild.members.fetch().then(fetchedMembers => {
         membersWithRole = fetchedMembers.filter(member => member.roles.cache.has(roleToRemoveId));
         // We now have a collection with all online member objects in the totalOnline variable
         console.log(`${membersWithRole}`);
+        console.log(`Bot has cleared out all the users with the verification in progress role.`);
     });
-    console.log(membersWithRole);
     // membersWithRole.forEach(member => {
     //     member.roles.add(roleToAdd);
     //     member.roles.remove(roleToRemoveId);
@@ -259,7 +259,7 @@ function startup(guild) {
     //         console.log(`${member.nickname} has dm's privated`);
     //     });
     // });
-    console.log(`Bot has cleared out all the users with the verification in progress role.`);
+    
 }
 
 twitchClient.on('message', (target, context, msg, self) => {
