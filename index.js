@@ -250,7 +250,7 @@ function startup(guild) {
     let roleToRemove = guild.roles.cache.get(roleToRemoveId);
     console.log(roleToRemove);
     let membersWithRole = new Array();
-    guild.members.cache.foreach(member => {
+    guild.members.cache.forEach(member => {
         membersWithRole.push(member);
     })
     console.log(membersWithRole);
