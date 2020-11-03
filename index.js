@@ -240,7 +240,7 @@ client.on('message', async message => {
     }
 });
 
-function startup(tempGuild) {
+async function startup(tempGuild) {
     //Get all members with the role id: 768313201787142175
     let roleToRemoveId = "768313201787142175";
     let roleToAdd = "768277106383519745";
