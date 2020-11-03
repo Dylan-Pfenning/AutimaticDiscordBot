@@ -149,7 +149,7 @@ client.on('message', async message => {
         let steamURLToSend = steamLinkArr[1];
         let id64;
         console.log(steamURL);
-        if (steamURL[2] === 'id' || steamURL[1] === 'id') {
+        if (steamURL[3] === 'id' || steamURL[1] === 'id') {
             let steamVanity;
             console.log(`vanityUrl`);
             if (steamURL[0] !== 'https:') {
@@ -176,7 +176,7 @@ client.on('message', async message => {
 
             id64 = steamInfo.response.steamid;
 
-        } else if (steamURL[2] === 'profiles' || steamURL[1] === 'profiles') {
+        } else if (steamURL[3] === 'profiles' || steamURL[1] === 'profiles') {
             console.log(`profiles url`);
             if (steamURL[0] !== 'https:') {
                 id64 = steamURL[2];
