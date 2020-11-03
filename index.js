@@ -238,17 +238,22 @@ client.on('message', async message => {
             startup();
         }
     }
+    message.guild.roles.
 });
 
 function startup() {
     //Get all members with the role id: 768313201787142175
-    let roleToRemove = "768313201787142175";
+    let roleToRemoveId = "768313201787142175";
     let roleToAdd = "768277106383519745";
-    let membersWithRole = DiscordGuild.roles.cache.get("768313201787142175").members.array();
+    let roleToRemove = DiscordGuild.roles.cache.get(roleToRemoveId);
+    let membersWithRole = new Array();
+    roleToRemove.member.forEach(user =>{
+        membersWithRole.push(user);
+    })
     console.log(membersWithRole);
     membersWithRole.forEach(member => {
         member.roles.add(roleToAdd);
-        member.roles.remove(roleToRemove);
+        member.roles.remove(roleToRemoveId);
         console.log(member.nickname);
         try {
             member.send(`Hi due to my restart your verification progress has been reset. Please start again`);
