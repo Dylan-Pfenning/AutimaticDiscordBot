@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 global.Headers = global.Headers || require("fetch-headers");
 //const { prefix, token, twitchID, twitchRecovery, twitchSecret, jsonBlob } = require('./config.json');
 var secretPhrases;
-var guild;
+var DiscordGuild;
 const client = new Discord.Client({ partials: ['MESSAGE', 'REACTION'] });
 var opts = {
     identity: {
@@ -31,7 +31,8 @@ client.once('ready', async ready => {
     console.log('TimBot Up and Running!');
     twitchClient.connect();
     console.log('Tim bot in the chat beep boop');
-    guild = client.guilds.cache.find(guild => guild.id === '462786774499065858');
+    DiscordGuild = client.guilds.cache.find(guild => guild.id === '462786774499065858');
+    console.log(`Discord guild is ${DiscordGuild.name}`);
     startup();
 })
 
@@ -243,7 +244,8 @@ function startup() {
     //Get all members with the role id: 768313201787142175
     let roleToRemove = "768313201787142175";
     let roleToAdd = "768277106383519745";
-    let membersWithRole = guild.roles.cache.get(roleToRemove).members.array();
+    let membersWithRole = DiscordGuild.roles.cache.get(roleToRemove).members.array();
+    console.log(membersWithRole);
     membersWithRole.forEach(member => {
         member.roles.add(roleToAdd);
         member.roles.remove(roleToRemove);
@@ -279,8 +281,8 @@ twitchClient.on('message', (target, context, msg, self) => {
     //@TODO_ Need to grab the right reward id for Tims channel point command here.
     if (context[`custom-reward-id`] === '1f8ced92-62fc-4a47-9f61-28839774ce94') {
         console.log(context['display-name']);
-        if (guild.members.cache.some(member => member.nickname === context['display-name'])) {
-            var upgradeMember = guild.members.cache.find(member => member.nickname === context['display-name']);
+        if (DiscordGuild.members.cache.some(member => member.nickname === context['display-name'])) {
+            var upgradeMember = DiscordGuild.members.cache.find(member => member.nickname === context['display-name']);
             upgradeMember.send("You've been upgraded!!!!!!");
         }
     }
