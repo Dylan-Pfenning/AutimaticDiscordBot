@@ -245,12 +245,12 @@ function startup(guild) {
     let roleToRemoveId = "768313201787142175";
     let roleToAdd = "768277106383519745";
     let roleToRemove = guild.roles.cache.get(roleToRemoveId);
-    let membersWithRole = new Array();
-    guild.members.cache.forEach(member => {
-        if(member.roles.cache.get(roleToRemove)){
-            membersWithRole.push(member);
-        }
-    })
+    let membersWithRole;
+    guild.members.fetch().then(fetchedMembers => {
+        membersWithRole = fetchedMembers.filter(member => member.roles.cache.has(roleToRemoveId));
+        // We now have a collection with all online member objects in the totalOnline variable
+        //console.log(`${membersWithRole}`);
+    });
     console.log(membersWithRole);
     // membersWithRole.forEach(member => {
     //     member.roles.add(roleToAdd);
