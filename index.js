@@ -244,20 +244,24 @@ async function startup(tempGuild) {
     //Get all members with the role id: 768313201787142175
     let roleToRemoveId = "768313201787142175";
     let roleToAdd = "768277106383519745";
-    let roleToRemove = tempGuild.roles.cache.get(roleToRemoveId);
-    let membersWithRole = new Array();
+    //let roleToRemove = tempGuild.roles.cache.get(roleToRemoveId);
     console.log(`Fetching Members`);
-    tempGuild.members.fetch().then(fetchedMembers => {
-        const totalOnline = fetchedMembers.filter(member => member.presence.status === 'online');
-        // We now have a collection with all online member objects in the totalOnline variable
-        console.log(`There are currently ${totalOnline.size} members online in this guild!`)
-        if (member.roles.cache.has(roleToRemoveId)) {
-            membersWithRole.push(member);
-            console.log(`foundMember`);
-        }
-        console.log(`${membersWithRole}`);
-        console.log(`Bot has cleared out all the users with the verification in progress role.`);
-    });
+    tempGuild.roles.fetch(roleToRemoveId).then(role => {
+        let membersWithRole = role.members
+        console.log(membersWithRole);
+    }).catch(console.error());
+
+    // tempGuild.members.fetch().then(fetchedMembers => {
+    //     const totalOnline = fetchedMembers.filter(member => member.presence.status === 'online');
+    //     // We now have a collection with all online member objects in the totalOnline variable
+    //     console.log(`There are currently ${totalOnline.size} members online in this guild!`)
+    //     if (member.roles.cache.has(roleToRemoveId)) {
+    //         membersWithRole.push(member);
+    //         console.log(`foundMember`);
+    //     }
+    //     console.log(`${membersWithRole}`);
+    //     console.log(`Bot has cleared out all the users with the verification in progress role.`);
+    // });
     // membersWithRole.forEach(member => {
     //     member.roles.add(roleToAdd);
     //     member.roles.remove(roleToRemoveId);
